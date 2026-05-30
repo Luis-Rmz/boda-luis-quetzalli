@@ -9,8 +9,68 @@ async function getSheetsClient() {
   return google.sheets({ version: 'v4', auth });
 }
 
+export interface GuestGroup {
+  id: number;
+  token: string;
+  adults: string[];
+  children: string[];
+  allowPlusOne: boolean;
+}
+
 export interface ExistingRSVP {
   attending: boolean;
+}
+
+/**
+ * Parses children names from the NOTA column (G).
+ * Example: "Incluye 3 niño(s): Kevin Macías, Oliver Macías, Lucas Macias"
+ */
+function parseChildren(nota: string): string[] {
+  if (!nota) return [];
+  const match = nota.match(/:\s*(.+)$/);
+  if (!match) return [];
+  return match[1].split(',').map((n) => n.trim()).filter(Boolean);
+}
+
+/**
+ * Returns all guest groups from the sheet.
+ * Columns: A=# | B=TOKEN | C=ADULTOS_NOMBRES | D=ADULTOS | E=NIÑOS | F=+1 | G=NOTA
+ */
+export async function getGuestGroups(): Promise<GuestGroup[]> {
+  try {
+    const sheetId = process.env.GOOGLE_SHEET_ID!;
+    const tab = process.env.GOOGLE_SHEET_TAB ?? 'Tokens de Invitacion';
+    const sheets = await getSheetsClient();
+
+    const res = await sheets.spreadsheets.values.get({
+      spreadsheetId: sheetId,
+      range: `'${tab}'!A:G`,
+    });
+
+    const rows = res.data.values ?? [];
+
+    return rows
+      .slice(1) // skip header
+      .filter((r) => r[1]) // must have token
+      .map((r) => ({
+        id: parseInt(r[0]) || 0,
+        token: r[1]?.trim() ?? '',
+        adults: (r[2] ?? '').split(',').map((n: string) => n.trim()).filter(Boolean),
+        children: parseChildren(r[6] ?? ''),
+        allowPlusOne: (r[5] ?? '').toString().toUpperCase() === 'SÍ' || r[5] === '1',
+      }));
+  } catch (err) {
+    console.error('[sheets] getGuestGroups error', err);
+    return [];
+  }
+}
+
+/**
+ * Returns a single guest group by token, or null if not found.
+ */
+export async function getGroupByTokenFromSheet(token: string): Promise<GuestGroup | null> {
+  const groups = await getGuestGroups();
+  return groups.find((g) => g.token === token) ?? null;
 }
 
 /**

@@ -26,7 +26,6 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       <audio
         ref={audioRef}
         src="/audio/dawn.mp3"
-        loop
         preload="auto"
         style={{ display: 'none' }}
       />

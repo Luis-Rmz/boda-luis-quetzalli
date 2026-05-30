@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { GuestGroup } from '@/app/data/guests';
+import type { GuestGroup } from '@/app/lib/sheets';
 import { useAudio } from '@/app/invitacion/AudioContext';
 
 interface Props {
@@ -157,7 +157,7 @@ export default function InvitacionClient({ group }: Props) {
 
             <p className="text-sm sm:text-base font-serif italic text-salvia mt-1 mb-3 sm:mb-5 animate-fade-up"
               style={{ animationDelay: '10.1s' }}>
-              Academia Renacimiento y Trinitate
+              Academia Renacimiento, León, Guajuato.
             </p>
 
             {/* 5. CTA */}
