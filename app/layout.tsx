@@ -25,8 +25,11 @@ const wistania = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Invitación de Boda",
+  title: "Luis & Quetzalli",
   description: "Confirma tu asistencia a nuestra boda",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
