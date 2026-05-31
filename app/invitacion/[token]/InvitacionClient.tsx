@@ -54,34 +54,24 @@ export default function InvitacionClient({ group }: Props) {
             <span className="absolute bottom-0 left-0  border-b border-l border-salvia/40 animate-corner" />
             <span className="absolute bottom-0 right-0 border-b border-r border-salvia/40 animate-corner" />
           </div>
-          <div className="flex flex-col items-center justify-between text-center px-8"
-            style={{ height: '55%', width: '100%', maxWidth: '360px' }}>
+          <div className="flex flex-col items-center justify-center gap-10 text-center px-8"
+            style={{ width: '100%', maxWidth: '360px' }}>
 
             {/* Cita */}
             <p className="font-serif italic text-salvia animate-fade-up"
-              style={{ animationDelay: '1s', fontSize: '0.78rem', lineHeight: 1.8, maxWidth: '280px' }}>
+              style={{ animationDelay: '1s', fontSize: '0.88rem', lineHeight: 1.9, maxWidth: '300px' }}>
               "Soy incapaz de precisar el momento, el lugar, la mirada o las palabras que sentaron los cimientos. Ha pasado demasiado tiempo. Estaba ya a mitad de camino cuando fui consciente de haberlo emprendido."
-              </p>
-
-            {/* Nombres + línea */}
-            <div className="flex flex-col items-center">
-              <p className="font-serif tracking-[0.2em] text-black/80 animate-fade-up"
-                style={{ fontSize: 'clamp(1rem, 4vw, 1.4rem)', animationDelay: '1.4s', marginBottom: '1rem' }}>
-                LUIS &amp; QUETZALLI
-              </p>
-              <div className="bg-black/20 animate-expand-x"
-                style={{ height: '0.5px', width: '40px', animationDelay: '1.7s' }} />
-            </div>
+            </p>
 
             {/* Toca + flecha */}
             <div className="flex flex-col items-center gap-3">
               <p className="font-serif italic text-salvia animate-fade-up"
-                style={{ fontSize: '0.82rem', animationDelay: '2s', lineHeight: 1.7 }}>
+                style={{ fontSize: '0.9rem', animationDelay: '1.6s', lineHeight: 1.7 }}>
                 Toca para abrir tu invitación
               </p>
-              <div className="animate-fade-up" style={{ animationDelay: '2.3s' }}>
+              <div className="animate-fade-up" style={{ animationDelay: '2s' }}>
                 <svg width="18" height="18" viewBox="0 0 20 20" fill="none"
-                  style={{ color: '#688236', animation: 'bob 2s ease-in-out infinite', animationDelay: '3s' }}>
+                  style={{ color: '#688236', animation: 'bob 2s ease-in-out infinite', animationDelay: '2.5s' }}>
                   <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
