@@ -16,8 +16,8 @@ export async function generateMetadata({
   if (!group) return {};
 
   const names = group.adults.join(' y ');
-  const title = `Invitación para: ${names}`;
-  const description = 'Luis & Quetzalli · 19 de Diciembre 2026';
+  const title = 'Luis & Quetzalli';
+  const description = `Invitación para: ${names} · 19 de Diciembre 2026`;
 
   return {
     title,
@@ -28,7 +28,7 @@ export async function generateMetadata({
       url: `https://luisyquetzalli.com/invitacion/${token}`,
       images: [
         {
-          url: 'https://luisyquetzalli.com/og-image.png',
+          url: 'https://luisyquetzalli.com/L&Q.png',
           width: 1200,
           height: 630,
           alt: 'Luis & Quetzalli · 19 · 12 · 2026',
@@ -40,7 +40,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title,
       description,
-      images: ['https://luisyquetzalli.com/og-image.png'],
+      images: ['https://luisyquetzalli.com/L&Q.png'],
     },
   };
 }
