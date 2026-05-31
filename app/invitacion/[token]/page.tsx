@@ -17,7 +17,7 @@ export async function generateMetadata({
 
   const names = group.adults.join(' y ');
   const title = 'Luis & Quetzalli';
-  const description = `Invitación para: ${names} · 19 de Diciembre 2026`;
+  const description = `Invitación para: ${names}`;
 
   return {
     title,
