@@ -26,9 +26,30 @@ const wistania = localFont({
 
 export const metadata: Metadata = {
   title: "Luis & Quetzalli",
-  description: "Confirma tu asistencia a nuestra boda",
+  description: "Te invitamos a celebrar nuestra boda · 19 de Diciembre 2026",
   icons: {
     icon: "/favicon.svg",
+  },
+  openGraph: {
+    title: "Luis & Quetzalli",
+    description: "Te invitamos a celebrar nuestra boda · 19 de Diciembre 2026",
+    url: "https://luisyquetzalli.com",
+    siteName: "Luis & Quetzalli",
+    images: [
+      {
+        url: "https://luisyquetzalli.com/L&Q.png",
+        width: 1200,
+        height: 630,
+        alt: "Luis & Quetzalli · 19 · 12 · 2026",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Luis & Quetzalli",
+    description: "Te invitamos a celebrar nuestra boda · 19 de Diciembre 2026",
+    images: ["https://luisyquetzalli.com/og-image.png"],
   },
 };
 
