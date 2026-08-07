@@ -204,11 +204,6 @@ export default function ConfirmarClient({ group, existingRSVP }: Props) {
             ¿Podrás acompañarnos?
           </p>
 
-          <p className="font-serif text-sm text-black/35 tracking-wide animate-fade-up"
-            style={{ animationDelay: '2.6s' }}>
-            Confirma antes del 31 de julio
-          </p>
-
           <div className="flex flex-col sm:flex-row gap-3 w-full animate-fade-up" style={{ animationDelay: '2.9s' }}>
             <button
               onClick={handleYes}
