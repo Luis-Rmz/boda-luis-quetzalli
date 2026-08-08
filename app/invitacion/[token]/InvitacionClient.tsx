@@ -94,12 +94,12 @@ export default function InvitacionClient({ group }: Props) {
             <span className="absolute bottom-0 right-0 border-b border-r border-salvia/40 animate-corner" style={{ animationDelay: '0s' }} />
           </div>
 
-          <div className="relative z-10 mx-auto flex h-full w-full max-w-md items-center justify-center px-10 py-12 sm:px-14 sm:py-16">
-          <div className="invitation-content w-full">
+          <div className="relative z-10 mx-auto flex h-full w-full items-center justify-center px-8 py-10 sm:px-12 sm:py-14">
+          <div className="invitation-content">
 
             {/* 1. Nombres */}
             <div className="flex flex-col items-center">
-              <h1 className="invitation-name-line font-serif tracking-[0.25em] text-black ml-3 animate-fade-up"
+              <h1 className="invitation-name-line font-serif text-black ml-3 animate-fade-up"
                 style={{ animationDelay: '5.2s' }}>
                 LUIS
               </h1>
@@ -107,7 +107,7 @@ export default function InvitacionClient({ group }: Props) {
                 style={{ animationDelay: '5.7s' }}>
                 y
               </span>
-              <h1 className="invitation-name-line font-serif tracking-[0.25em] text-black ml-3 animate-fade-up"
+              <h1 className="invitation-name-line font-serif text-black ml-3 animate-fade-up"
                 style={{ animationDelay: '6.2s' }}>
                 QUETZALLI
               </h1>

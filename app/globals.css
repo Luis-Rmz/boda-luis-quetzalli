@@ -86,25 +86,23 @@
   }
 
   .invitation-content {
-    max-height: calc(100dvh - 5.5rem);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: none;
+    width: min(100%, 56rem);
+    max-height: calc(100dvh - 5rem);
+    overflow: visible;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: clamp(0.25rem, 0.75vh, 0.85rem);
     padding-block: clamp(0.25rem, 1vh, 0.75rem);
-  }
-
-  .invitation-content::-webkit-scrollbar {
-    display: none;
+    transform-origin: center;
   }
 
   .invitation-name-line {
-    font-size: clamp(2.6rem, min(7vw, 6.8vh), 4rem);
+    font-size: clamp(2.5rem, min(8vw, 6.8vh), 4.35rem);
     line-height: 0.95;
+    letter-spacing: clamp(0.16em, 0.9vw, 0.25em);
+    white-space: nowrap;
   }
 
   .invitation-ampersand {
@@ -113,6 +111,7 @@
   }
 
   .invitation-divider {
+    max-width: 32rem;
     margin-block: clamp(0.15rem, 0.65vh, 0.75rem);
   }
 
@@ -139,12 +138,31 @@
     display: inline-block;
     font-size: clamp(1.9rem, min(5vw, 4.6vh), 3rem);
     line-height: 1;
+    white-space: nowrap;
   }
 
   @media (max-height: 760px) {
     .invitation-content {
-      justify-content: flex-start;
       max-height: calc(100dvh - 4.75rem);
+      gap: clamp(0.15rem, 0.45vh, 0.5rem);
+      transform: scale(0.92);
+    }
+
+    .invitation-building {
+      width: min(46vw, 17vh);
+    }
+  }
+
+  @media (max-height: 640px) {
+    .invitation-content {
+      transform: scale(0.82);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .invitation-name-line {
+      font-size: clamp(2.2rem, 10.5vw, 3.15rem);
+      letter-spacing: clamp(0.12em, 0.65vw, 0.18em);
     }
   }
 }
