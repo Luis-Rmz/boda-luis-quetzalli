@@ -84,7 +84,7 @@ export default function InvitacionClient({ group }: Props) {
 
       {/* ── INVITATION ──────────────────────────────────── */}
       {invitationVisible && (
-        <main className="relative h-dvh flex flex-col items-center justify-center px-10 sm:px-14 py-10 sm:py-14 text-center overflow-hidden">
+        <main className="relative h-dvh text-center overflow-hidden">
 
           {/* Corner frame */}
           <div className="pointer-events-none absolute inset-5 sm:inset-7">
@@ -94,26 +94,27 @@ export default function InvitacionClient({ group }: Props) {
             <span className="absolute bottom-0 right-0 border-b border-r border-salvia/40 animate-corner" style={{ animationDelay: '0s' }} />
           </div>
 
-          <div className="w-full max-w-md flex flex-col items-center">
+          <div className="relative z-10 mx-auto flex h-full w-full max-w-md items-center justify-center px-10 py-12 sm:px-14 sm:py-16">
+          <div className="invitation-content w-full">
 
             {/* 1. Nombres */}
             <div className="flex flex-col items-center">
-              <h1 className="text-[8vw] sm:text-5xl md:text-6xl font-serif tracking-[0.25em] text-black ml-3 animate-fade-up"
+              <h1 className="invitation-name-line font-serif tracking-[0.25em] text-black ml-3 animate-fade-up"
                 style={{ animationDelay: '5.2s' }}>
                 LUIS
               </h1>
-              <span className="block text-[8vw] sm:text-5xl md:text-6xl font-cursive text-black leading-none my-1 opacity-90 animate-fade-up"
+              <span className="invitation-ampersand block font-cursive text-black leading-none opacity-90 animate-fade-up"
                 style={{ animationDelay: '5.7s' }}>
                 y
               </span>
-              <h1 className="text-[8vw] sm:text-5xl md:text-6xl font-serif tracking-[0.25em] text-black ml-3 animate-fade-up"
+              <h1 className="invitation-name-line font-serif tracking-[0.25em] text-black ml-3 animate-fade-up"
                 style={{ animationDelay: '6.2s' }}>
                 QUETZALLI
               </h1>
             </div>
 
             {/* 2. Imagen */}
-            <div className="flex items-center gap-4 my-2 sm:my-4 w-4/5">
+            <div className="invitation-divider flex items-center gap-4 w-4/5">
               <div className="flex-1 h-px bg-black/20 animate-expand-x" style={{ animationDelay: '6.8s' }} />
               <span className="text-black/30 text-[10px] animate-fade-up" style={{ animationDelay: '7.0s' }}>◇</span>
               <div className="flex-1 h-px bg-black/20 animate-expand-x" style={{ animationDelay: '6.8s' }} />
@@ -128,33 +129,33 @@ export default function InvitacionClient({ group }: Props) {
               unoptimized
               loading="eager"
               fetchPriority="high"
-              className="w-44 sm:w-56 md:w-64 h-auto animate-fade-up"
+              className="invitation-building h-auto animate-fade-up"
               style={{ animationDelay: '7.5s' }} />
 
             {/* 3. Te invitamos */}
-            <div className="flex items-center gap-4 my-2 sm:my-4 w-4/5">
+            <div className="invitation-divider flex items-center gap-4 w-4/5">
               <div className="flex-1 h-px bg-black/20 animate-expand-x" style={{ animationDelay: '8.2s' }} />
               <span className="text-black/30 text-[10px] animate-fade-up" style={{ animationDelay: '8.4s' }}>◇</span>
               <div className="flex-1 h-px bg-black/20 animate-expand-x" style={{ animationDelay: '8.2s' }} />
             </div>
 
-            <p className="text-xs tracking-[0.4em] uppercase font-serif text-salvia mb-1 animate-fade-up"
+            <p className="invitation-overline tracking-[0.4em] uppercase font-serif text-salvia animate-fade-up"
               style={{ animationDelay: '8.8s' }}>
               Te invitamos a celebrar
             </p>
 
-            <p className="text-xs tracking-[0.4em] uppercase font-serif text-salvia mb-2 sm:mb-4 animate-fade-up"
+            <p className="invitation-overline tracking-[0.4em] uppercase font-serif text-salvia animate-fade-up"
               style={{ animationDelay: '9.2s' }}>
               Nuestra boda
             </p>
 
             {/* 4. Fecha y lugar */}
-            <p className="text-xs sm:text-sm tracking-[0.35em] uppercase font-serif text-black/60 animate-fade-up"
+            <p className="invitation-date tracking-[0.35em] uppercase font-serif text-black/60 animate-fade-up"
               style={{ animationDelay: '9.7s' }}>
               19 de Diciembre, 2026
             </p>
 
-            <p className="text-sm sm:text-base font-serif italic text-salvia mt-1 mb-3 sm:mb-5 animate-fade-up"
+            <p className="invitation-place font-serif italic text-salvia animate-fade-up"
               style={{ animationDelay: '10.1s' }}>
               Academia Renacimiento, León, Guajuato.
             </p>
@@ -166,12 +167,13 @@ export default function InvitacionClient({ group }: Props) {
               className="animate-fade-up group cursor-pointer"
               style={{ animationDelay: '10.6s', background: 'none', border: 'none', padding: 0 }}
             >
-              <span className="text-3xl sm:text-4xl md:text-5xl font-cursive text-black group-hover:opacity-60 transition-opacity"
+              <span className="invitation-cta font-cursive text-black group-hover:opacity-60 transition-opacity"
                 style={{ borderBottom: '1px solid currentColor', paddingBottom: '2px' }}>
                 Confirma tu asistencia
               </span>
             </button>
 
+          </div>
           </div>
         </main>
       )}
