@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import type { GuestGroup } from '@/app/lib/sheets';
 import { useAudio } from '@/app/invitacion/AudioContext';
@@ -60,7 +61,7 @@ export default function InvitacionClient({ group }: Props) {
             {/* Cita */}
             <p className="font-serif italic text-salvia animate-fade-up"
               style={{ animationDelay: '1s', fontSize: '0.88rem', lineHeight: 1.9, maxWidth: '300px' }}>
-              "Soy incapaz de precisar el momento, el lugar, la mirada o las palabras que sentaron los cimientos. Ha pasado demasiado tiempo. Estaba ya a mitad de camino cuando fui consciente de haberlo emprendido."
+              &ldquo;Soy incapaz de precisar el momento, el lugar, la mirada o las palabras que sentaron los cimientos. Ha pasado demasiado tiempo. Estaba ya a mitad de camino cuando fui consciente de haberlo emprendido.&rdquo;
             </p>
 
             {/* Toca + flecha */}
@@ -118,8 +119,16 @@ export default function InvitacionClient({ group }: Props) {
               <div className="flex-1 h-px bg-black/20 animate-expand-x" style={{ animationDelay: '6.8s' }} />
             </div>
 
-            <img src="/building.png" alt="Academia Renacimiento y Trinitate"
-              className="w-32 sm:w-44 md:w-52 h-auto animate-fade-up"
+            <Image
+              src="/building-invitation.png"
+              alt="Academia Renacimiento y Trinitate"
+              width={371}
+              height={520}
+              preload
+              unoptimized
+              loading="eager"
+              fetchPriority="high"
+              className="w-44 sm:w-56 md:w-64 h-auto animate-fade-up"
               style={{ animationDelay: '7.5s' }} />
 
             {/* 3. Te invitamos */}
