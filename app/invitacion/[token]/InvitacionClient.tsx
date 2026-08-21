@@ -157,7 +157,7 @@ export default function InvitacionClient({ group }: Props) {
 
             <p className="invitation-place font-serif italic text-salvia animate-fade-up"
               style={{ animationDelay: '10.1s' }}>
-              Academia Renacimiento, León, Guajuato.
+              Academia Renacimiento, León, Guanajuato.
             </p>
 
             {/* 5. CTA */}
