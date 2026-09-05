@@ -1,20 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
-  allowedDevOrigins: ['192.168.100.14'],
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, proxy-revalidate' },
-          { key: 'Pragma', value: 'no-cache' },
-          { key: 'Expires', value: '0' },
-        ],
-      },
-    ];
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
   },
+  allowedDevOrigins: ['192.168.100.14'],
 };
 
 export default nextConfig;

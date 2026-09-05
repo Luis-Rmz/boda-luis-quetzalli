@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import type { GuestGroup } from '@/app/lib/sheets';
+import { useEffect, useState } from 'react';
+import type { GuestGroup } from '@/app/data/guests';
 
 interface Props {
   group: GuestGroup;
@@ -32,6 +32,24 @@ export default function ConfirmarClient({ group, existingRSVP }: Props) {
   const [restrictions, setRestrictions] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch(`/api/rsvp?token=${encodeURIComponent(group.token)}`)
+      .then((res) => res.ok ? res.json() : null)
+      .then((data) => {
+        if (!cancelled && data?.existingRSVP) {
+          setAttending(data.existingRSVP.attending);
+          setStep('done');
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [group.token]);
 
   const toggleAdult = (name: string) =>
     setAdultsAttending((p) => ({ ...p, [name]: !p[name] }));

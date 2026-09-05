@@ -1,9 +1,13 @@
-export const dynamic = 'force-dynamic';
-
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getGroupByTokenFromSheet, getExistingRSVP } from '@/app/lib/sheets';
+import { getGroupByToken, GUEST_GROUPS } from '@/app/data/guests';
 import InvitacionClient from './InvitacionClient';
+
+export function generateStaticParams() {
+  return GUEST_GROUPS.map((group) => ({ token: group.token }));
+}
+
+export const dynamicParams = false;
 
 export async function generateMetadata({
   params,
@@ -11,7 +15,7 @@ export async function generateMetadata({
   params: Promise<{ token: string }>;
 }): Promise<Metadata> {
   const { token } = await params;
-  const group = await getGroupByTokenFromSheet(token);
+  const group = getGroupByToken(token);
 
   if (!group) return {};
 
@@ -51,14 +55,9 @@ export default async function InvitacionPage({
   params: Promise<{ token: string }>;
 }) {
   const { token } = await params;
-  const group = await getGroupByTokenFromSheet(token);
+  const group = getGroupByToken(token);
 
   if (!group) notFound();
-
-  const existing = await getExistingRSVP(token);
-  if (existing !== null) {
-    redirect(`/invitacion/${token}/confirmar`);
-  }
 
   return <InvitacionClient group={group} />;
 }

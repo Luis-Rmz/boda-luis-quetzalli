@@ -1,8 +1,12 @@
-export const dynamic = 'force-dynamic';
-
 import { notFound } from 'next/navigation';
-import { getGroupByTokenFromSheet, getExistingRSVP } from '@/app/lib/sheets';
+import { getGroupByToken, GUEST_GROUPS } from '@/app/data/guests';
 import ConfirmarClient from './ConfirmarClient';
+
+export function generateStaticParams() {
+  return GUEST_GROUPS.map((group) => ({ token: group.token }));
+}
+
+export const dynamicParams = false;
 
 export default async function ConfirmarPage({
   params,
@@ -10,11 +14,9 @@ export default async function ConfirmarPage({
   params: Promise<{ token: string }>;
 }) {
   const { token } = await params;
-  const group = await getGroupByTokenFromSheet(token);
+  const group = getGroupByToken(token);
 
   if (!group) notFound();
 
-  const existing = await getExistingRSVP(token);
-
-  return <ConfirmarClient group={group} existingRSVP={existing} />;
+  return <ConfirmarClient group={group} />;
 }
