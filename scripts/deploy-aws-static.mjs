@@ -463,6 +463,16 @@ function ensureCloudFrontFunction() {
     return request;
   }
 
+  if (uri.indexOf('/invitacion/') === 0 && (uri.endsWith('/confirmar') || uri.endsWith('/confirmar/'))) {
+    request.uri = '/invitacion/confirmar/index.html';
+    return request;
+  }
+
+  if (uri.indexOf('/invitacion/') === 0) {
+    request.uri = '/invitacion/index.html';
+    return request;
+  }
+
   if (uri.endsWith('/')) {
     request.uri = uri + 'index.html';
   } else if (uri.indexOf('.') === -1) {

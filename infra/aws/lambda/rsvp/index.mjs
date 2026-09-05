@@ -84,21 +84,58 @@ function sheetRange(range) {
   return encodeURIComponent(`'${process.env.GOOGLE_SHEET_TAB ?? 'Tokens de Invitacion'}'!${range}`);
 }
 
-async function findTokenRow(token) {
-  const sheetId = process.env.GOOGLE_SHEET_ID;
-  const data = await sheetsRequest(`${sheetId}/values/${sheetRange('B:B')}`);
-  const rows = data.values ?? [];
-  const rowIndex = rows.findIndex((row, index) => index > 0 && row[0] === token);
+function parseChildren(nota) {
+  if (!nota) return [];
+  const match = nota.match(/:\s*(.+)$/);
+  if (!match) return [];
+  return match[1].split(',').map((name) => name.trim()).filter(Boolean);
+}
 
-  return rowIndex === -1 ? null : rowIndex + 1;
+function rowToGroup(row) {
+  return {
+    id: Number.parseInt(row[0] ?? '0', 10) || 0,
+    token: row[1]?.trim() ?? '',
+    adults: (row[2] ?? '').split(',').map((name) => name.trim()).filter(Boolean),
+    children: parseChildren(row[6] ?? ''),
+    allowPlusOne: (row[5] ?? '').toString().toUpperCase() === 'SÍ' || row[5] === '1',
+  };
+}
+
+async function findTokenRecord(token) {
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+  const data = await sheetsRequest(`${sheetId}/values/${sheetRange('A:H')}`);
+  const rows = data.values ?? [];
+  const rowIndex = rows.findIndex((row, index) => index > 0 && row[1] === token);
+
+  if (rowIndex === -1) return null;
+
+  return {
+    sheetRow: rowIndex + 1,
+    row: rows[rowIndex],
+  };
+}
+
+async function getInvitationState(token) {
+  const record = await findTokenRecord(token);
+  if (!record) return { group: null, existingRSVP: null };
+
+  const normalized = record.row[7]?.trim().toUpperCase() ?? '';
+  const existingRSVP = !normalized || normalized === 'PENDIENTE' || (normalized !== 'SÍ' && normalized !== 'SI' && normalized !== 'NO')
+    ? null
+    : { attending: normalized === 'SÍ' || normalized === 'SI' };
+
+  return {
+    group: rowToGroup(record.row),
+    existingRSVP,
+  };
 }
 
 async function getExistingRSVP(token) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
-  const sheetRow = await findTokenRow(token);
-  if (!sheetRow) return null;
+  const record = await findTokenRecord(token);
+  if (!record) return null;
 
-  const data = await sheetsRequest(`${sheetId}/values/${sheetRange(`H${sheetRow}`)}`);
+  const data = await sheetsRequest(`${sheetId}/values/${sheetRange(`H${record.sheetRow}`)}`);
   const normalized = data.values?.[0]?.[0]?.trim().toUpperCase() ?? '';
 
   if (!normalized || normalized === 'PENDIENTE') return null;
@@ -109,8 +146,8 @@ async function getExistingRSVP(token) {
 
 async function updateRSVP(payload) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
-  const sheetRow = await findTokenRow(payload.token);
-  if (!sheetRow) return false;
+  const record = await findTokenRecord(payload.token);
+  if (!record) return false;
 
   const adults = [...(payload.adultsAttending ?? [])];
   if (payload.plusOneName) adults.push(`${payload.plusOneName} (+1)`);
@@ -125,7 +162,7 @@ async function updateRSVP(payload) {
   });
 
   await sheetsRequest(
-    `${sheetId}/values/${sheetRange(`H${sheetRow}:L${sheetRow}`)}?valueInputOption=USER_ENTERED`,
+    `${sheetId}/values/${sheetRange(`H${record.sheetRow}:L${record.sheetRow}`)}?valueInputOption=USER_ENTERED`,
     {
       method: 'PUT',
       body: JSON.stringify({
@@ -155,7 +192,7 @@ export async function handler(event) {
       const token = event.queryStringParameters?.token;
       if (!token) return json(400, { ok: false, error: 'Token requerido' });
 
-      return json(200, { ok: true, existingRSVP: await getExistingRSVP(token) });
+      return json(200, { ok: true, ...(await getInvitationState(token)) });
     }
 
     if (method === 'POST') {

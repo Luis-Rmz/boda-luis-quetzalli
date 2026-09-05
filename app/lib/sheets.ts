@@ -80,7 +80,7 @@ export async function getGroupByTokenFromSheet(token: string): Promise<GuestGrou
 export async function getExistingRSVP(token: string): Promise<ExistingRSVP | null> {
   try {
     const sheetId = process.env.GOOGLE_SHEET_ID!;
-    const tab = process.env.GOOGLE_SHEET_TAB ?? 'Tokens de Invitación';
+    const tab = process.env.GOOGLE_SHEET_TAB ?? 'Tokens de Invitacion';
     const sheets = await getSheetsClient();
 
     // 1. Find the row by matching token in column B (same as RSVP route)

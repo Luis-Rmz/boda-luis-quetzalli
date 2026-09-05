@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import type { GuestGroup } from '@/app/data/guests';
 import { useAudio } from '@/app/invitacion/AudioContext';
 
@@ -15,7 +14,6 @@ export default function InvitacionClient({ group }: Props) {
   const [overlayFading, setOverlayFading] = useState(false);
   const [invitationVisible, setInvitationVisible] = useState(false);
   const { play } = useAudio();
-  const router = useRouter();
 
   useEffect(() => {
     let cancelled = false;
@@ -24,7 +22,7 @@ export default function InvitacionClient({ group }: Props) {
       .then((res) => res.ok ? res.json() : null)
       .then((data) => {
         if (!cancelled && data?.existingRSVP) {
-          router.replace(`/invitacion/${group.token}/confirmar`);
+          window.location.replace(`/invitacion/${group.token}/confirmar`);
         }
       })
       .catch(() => undefined);
@@ -32,7 +30,7 @@ export default function InvitacionClient({ group }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [group.token, router]);
+  }, [group.token]);
 
   const enter = () => {
     if (overlayFading) return;
@@ -45,7 +43,7 @@ export default function InvitacionClient({ group }: Props) {
   };
 
   const goToConfirm = () => {
-    router.push(`/invitacion/${group.token}/confirmar`);
+    window.location.assign(`/invitacion/${group.token}/confirmar`);
   };
 
   return (
