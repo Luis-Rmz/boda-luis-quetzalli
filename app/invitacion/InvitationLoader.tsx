@@ -1,26 +1,31 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import type { GuestGroup } from '@/app/data/guests';
 import InvitacionClient from './[token]/InvitacionClient';
 import ConfirmarClient from './[token]/confirmar/ConfirmarClient';
+import TimelineClient, { type GiftDetails } from './[token]/timeline/TimelineClient';
 
 interface Props {
-  mode: 'invitation' | 'confirm';
+  mode: 'invitation' | 'confirm' | 'timeline';
 }
 
 interface RSVPResponse {
   ok: boolean;
   group?: GuestGroup;
   existingRSVP?: { attending: boolean } | null;
+  gift?: GiftDetails | null;
 }
 
 function tokenFromPath(pathname: string, mode: Props['mode']): string | null {
   const segments = pathname.split('/').filter(Boolean);
   if (segments[0] !== 'invitacion') return null;
   if (mode === 'confirm' && segments[2] !== 'confirmar') return null;
+  if (mode === 'timeline' && segments[2] !== 'timeline') return null;
   return segments[1] ?? null;
 }
+
+const subscribeToPathname = () => () => undefined;
 
 function FrameMessage({ children }: { children: React.ReactNode }) {
   return (
@@ -47,26 +52,19 @@ function FrameMessage({ children }: { children: React.ReactNode }) {
 }
 
 export default function InvitationLoader({ mode }: Props) {
-  const [pathname, setPathname] = useState('');
-  const token = useMemo(() => tokenFromPath(pathname, mode), [mode, pathname]);
+  const pathname = useSyncExternalStore(
+    subscribeToPathname,
+    () => window.location.pathname,
+    () => '',
+  );
+  const token = tokenFromPath(pathname, mode);
   const [data, setData] = useState<RSVPResponse | null>(null);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    setPathname(window.location.pathname);
-  }, []);
-
-  useEffect(() => {
-    if (!pathname) return;
-
-    if (!token) {
-      setFailed(true);
-      return;
-    }
+    if (!pathname || !token) return;
 
     let cancelled = false;
-    setData(null);
-    setFailed(false);
 
     fetch(`/api/rsvp?token=${encodeURIComponent(token)}`)
       .then(async (res) => {
@@ -119,6 +117,29 @@ export default function InvitationLoader({ mode }: Props) {
         </p>
       </FrameMessage>
     );
+  }
+
+  if (mode === 'timeline') {
+    if (!data.existingRSVP?.attending) {
+      return (
+        <FrameMessage>
+          <p className="font-cursive text-4xl sm:text-5xl text-black/85 animate-fade-up">
+            Programa reservado
+          </p>
+          <p className="font-serif text-base text-black/45 leading-relaxed animate-fade-up">
+            Confirma tu asistencia para consultar los detalles de la boda.
+          </p>
+          <a
+            href={`/invitacion/${data.group.token}/confirmar`}
+            className="border-b border-black/60 pb-1 font-cursive text-3xl text-black/80 transition-colors hover:text-salvia"
+          >
+            Confirmar asistencia
+          </a>
+        </FrameMessage>
+      );
+    }
+
+    return <TimelineClient group={data.group} gift={data.gift ?? null} />;
   }
 
   if (mode === 'confirm') {

@@ -149,8 +149,15 @@ export default function ConfirmarClient({ group, existingRSVP }: Props) {
               </p>
               <p className="font-serif text-sm text-black/35 leading-relaxed animate-fade-up"
                 style={{ animationDelay: '2.5s' }}>
-                Próximamente compartiremos más detalles conforme se acerque la fecha.
+                El programa de la boda ya está disponible.
               </p>
+              <a
+                href={`/invitacion/${group.token}/timeline`}
+                className="border-b border-black/60 pb-1 font-cursive text-3xl text-black/80 transition-colors hover:text-salvia animate-fade-up"
+                style={{ animationDelay: '2.7s' }}
+              >
+                Ver programa
+              </a>
             </>
           ) : (
             <>

@@ -130,18 +130,26 @@ async function getInvitationState(token) {
   };
 }
 
-async function getExistingRSVP(token) {
-  const sheetId = process.env.GOOGLE_SHEET_ID;
-  const record = await findTokenRecord(token);
-  if (!record) return null;
+function getGiftDetails() {
+  const paymentUrl = process.env.REVOLUT_PAYMENT_URL?.trim();
+  const revtag = process.env.REVOLUT_REVTAG?.trim();
+  const clabe = process.env.REVOLUT_CLABE?.replace(/\s/g, '');
+  const beneficiary = process.env.REVOLUT_BENEFICIARY?.trim();
+  const bankName = process.env.REVOLUT_BANK_NAME?.trim();
+  const transferConcept = process.env.REVOLUT_TRANSFER_CONCEPT?.trim();
+  const registryUrl = process.env.GIFT_REGISTRY_URL?.trim();
 
-  const data = await sheetsRequest(`${sheetId}/values/${sheetRange(`H${record.sheetRow}`)}`);
-  const normalized = data.values?.[0]?.[0]?.trim().toUpperCase() ?? '';
+  if (!paymentUrl && !revtag && !clabe && !registryUrl) return null;
 
-  if (!normalized || normalized === 'PENDIENTE') return null;
-  if (normalized !== 'SÍ' && normalized !== 'SI' && normalized !== 'NO') return null;
-
-  return { attending: normalized === 'SÍ' || normalized === 'SI' };
+  return {
+    ...(paymentUrl ? { paymentUrl } : {}),
+    ...(revtag ? { revtag } : {}),
+    ...(clabe ? { clabe } : {}),
+    ...(beneficiary ? { beneficiary } : {}),
+    ...(bankName ? { bankName } : {}),
+    ...(transferConcept ? { transferConcept } : {}),
+    ...(registryUrl ? { registryUrl } : {}),
+  };
 }
 
 async function updateRSVP(payload) {
@@ -192,7 +200,10 @@ export async function handler(event) {
       const token = event.queryStringParameters?.token;
       if (!token) return json(400, { ok: false, error: 'Token requerido' });
 
-      return json(200, { ok: true, ...(await getInvitationState(token)) });
+      const invitation = await getInvitationState(token);
+      const gift = invitation.existingRSVP?.attending ? getGiftDetails() : null;
+
+      return json(200, { ok: true, ...invitation, gift });
     }
 
     if (method === 'POST') {

@@ -468,6 +468,11 @@ function ensureCloudFrontFunction() {
     return request;
   }
 
+  if (uri.indexOf('/invitacion/') === 0 && (uri.endsWith('/timeline') || uri.endsWith('/timeline/'))) {
+    request.uri = '/invitacion/timeline/index.html';
+    return request;
+  }
+
   if (uri.indexOf('/invitacion/') === 0) {
     request.uri = '/invitacion/index.html';
     return request;
@@ -810,6 +815,13 @@ const lambdaEnvFile = writeTempJson('boda-lambda-env', {
     GOOGLE_SHEET_ID: envValues.GOOGLE_SHEET_ID,
     GOOGLE_SHEET_TAB: envValues.GOOGLE_SHEET_TAB ?? 'Tokens de Invitacion',
     GOOGLE_SERVICE_ACCOUNT_JSON: serviceAccount,
+    REVOLUT_PAYMENT_URL: envValues.REVOLUT_PAYMENT_URL ?? '',
+    REVOLUT_REVTAG: envValues.REVOLUT_REVTAG ?? '',
+    REVOLUT_CLABE: envValues.REVOLUT_CLABE ?? '',
+    REVOLUT_BENEFICIARY: envValues.REVOLUT_BENEFICIARY ?? '',
+    REVOLUT_BANK_NAME: envValues.REVOLUT_BANK_NAME ?? '',
+    REVOLUT_TRANSFER_CONCEPT: envValues.REVOLUT_TRANSFER_CONCEPT ?? '',
+    GIFT_REGISTRY_URL: envValues.GIFT_REGISTRY_URL ?? '',
   },
 });
 
