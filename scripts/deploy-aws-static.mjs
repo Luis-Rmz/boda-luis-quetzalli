@@ -1,4 +1,4 @@
-import { execFileSync, spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -760,11 +760,13 @@ function putBucketPolicy(bucketName, accountId, distributionId) {
 }
 
 function syncStatic(bucketName) {
+  const destination = `s3://${bucketName}`;
+
   run('aws', [
     's3',
     'sync',
     'out',
-    `s3://${bucketName}`,
+    destination,
     '--delete',
     '--cache-control',
     'no-store',
@@ -773,6 +775,27 @@ function syncStatic(bucketName) {
     '--region',
     region,
   ], { inherit: true });
+
+  const cachedAssetGroups = [
+    { source: 'out/_next/static', target: `${destination}/_next/static`, cacheControl: 'public,max-age=31536000,immutable' },
+    { source: 'out/audio', target: `${destination}/audio`, cacheControl: 'public,max-age=86400' },
+  ];
+
+  for (const assetGroup of cachedAssetGroups) {
+    run('aws', [
+      's3',
+      'cp',
+      assetGroup.source,
+      assetGroup.target,
+      '--recursive',
+      '--cache-control',
+      assetGroup.cacheControl,
+      '--profile',
+      profile,
+      '--region',
+      region,
+    ], { inherit: true });
+  }
 }
 
 function upsertDns(hostedZoneId, distributionDomainName) {

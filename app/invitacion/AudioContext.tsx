@@ -24,6 +24,8 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     const el = audioRef.current;
     if (!el) return;
 
+    el.load();
+
     const syncPlaybackState = () => {
       setIsPlaying(!el.paused);
       if (!el.paused) {
