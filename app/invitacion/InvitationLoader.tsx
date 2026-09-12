@@ -5,9 +5,15 @@ import type { GuestGroup } from '@/app/data/guests';
 import InvitacionClient from './[token]/InvitacionClient';
 import ConfirmarClient from './[token]/confirmar/ConfirmarClient';
 import TimelineClient, { type GiftDetails } from './[token]/timeline/TimelineClient';
+import {
+  invitationRouteFromPath,
+  navigateInvitation,
+  subscribeToInvitationPath,
+  type InvitationMode,
+} from './navigation';
 
 interface Props {
-  mode: 'invitation' | 'confirm' | 'timeline';
+  mode: InvitationMode;
 }
 
 interface RSVPResponse {
@@ -16,16 +22,6 @@ interface RSVPResponse {
   existingRSVP?: { attending: boolean } | null;
   gift?: GiftDetails | null;
 }
-
-function tokenFromPath(pathname: string, mode: Props['mode']): string | null {
-  const segments = pathname.split('/').filter(Boolean);
-  if (segments[0] !== 'invitacion') return null;
-  if (mode === 'confirm' && segments[2] !== 'confirmar') return null;
-  if (mode === 'timeline' && segments[2] !== 'timeline') return null;
-  return segments[1] ?? null;
-}
-
-const subscribeToPathname = () => () => undefined;
 
 function FrameMessage({ children }: { children: React.ReactNode }) {
   return (
@@ -53,13 +49,18 @@ function FrameMessage({ children }: { children: React.ReactNode }) {
 
 export default function InvitationLoader({ mode }: Props) {
   const pathname = useSyncExternalStore(
-    subscribeToPathname,
+    subscribeToInvitationPath,
     () => window.location.pathname,
     () => '',
   );
-  const token = tokenFromPath(pathname, mode);
-  const [data, setData] = useState<RSVPResponse | null>(null);
-  const [failed, setFailed] = useState(false);
+  const route = invitationRouteFromPath(pathname);
+  const activeMode = route?.mode ?? mode;
+  const token = route?.token ?? null;
+  const requestKey = route ? `${route.mode}:${route.token}` : '';
+  const [loaded, setLoaded] = useState<{ key: string; data: RSVPResponse } | null>(null);
+  const [failedKey, setFailedKey] = useState<string | null>(null);
+  const data = loaded?.key === requestKey ? loaded.data : null;
+  const failed = failedKey === requestKey;
 
   useEffect(() => {
     if (!pathname || !token) return;
@@ -72,18 +73,18 @@ export default function InvitationLoader({ mode }: Props) {
         return res.json() as Promise<RSVPResponse>;
       })
       .then((response) => {
-        if (!cancelled) setData(response);
+        if (!cancelled) setLoaded({ key: requestKey, data: response });
       })
       .catch(() => {
-        if (!cancelled) setFailed(true);
+        if (!cancelled) setFailedKey(requestKey);
       });
 
     return () => {
       cancelled = true;
     };
-  }, [pathname, token]);
+  }, [pathname, requestKey, token]);
 
-  if (failed || (pathname && !token)) {
+  if (failed || (pathname && !route)) {
     return (
       <FrameMessage>
         <p className="font-cursive text-4xl sm:text-5xl text-black/85 animate-fade-up">
@@ -119,7 +120,7 @@ export default function InvitationLoader({ mode }: Props) {
     );
   }
 
-  if (mode === 'timeline') {
+  if (activeMode === 'timeline') {
     if (!data.existingRSVP?.attending) {
       return (
         <FrameMessage>
@@ -129,12 +130,13 @@ export default function InvitationLoader({ mode }: Props) {
           <p className="font-serif text-base text-black/45 leading-relaxed animate-fade-up">
             Confirma tu asistencia para consultar los detalles de la boda.
           </p>
-          <a
-            href={`/invitacion/${data.group.token}/confirmar`}
+          <button
+            type="button"
+            onClick={() => navigateInvitation(`/invitacion/${data.group!.token}/confirmar`)}
             className="border-b border-black/60 pb-1 font-cursive text-3xl text-black/80 transition-colors hover:text-salvia"
           >
             Confirmar asistencia
-          </a>
+          </button>
         </FrameMessage>
       );
     }
@@ -142,7 +144,7 @@ export default function InvitationLoader({ mode }: Props) {
     return <TimelineClient group={data.group} gift={data.gift ?? null} />;
   }
 
-  if (mode === 'confirm') {
+  if (activeMode === 'confirm') {
     return <ConfirmarClient group={data.group} existingRSVP={data.existingRSVP} />;
   }
 

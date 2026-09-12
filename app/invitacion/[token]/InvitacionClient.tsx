@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import type { GuestGroup } from '@/app/data/guests';
 import { useAudio } from '@/app/invitacion/AudioContext';
+import { navigateInvitation } from '@/app/invitacion/navigation';
 
 interface Props {
   group: GuestGroup;
@@ -22,7 +23,7 @@ export default function InvitacionClient({ group }: Props) {
       .then((res) => res.ok ? res.json() : null)
       .then((data) => {
         if (!cancelled && data?.existingRSVP) {
-          window.location.replace(`/invitacion/${group.token}/confirmar`);
+          navigateInvitation(`/invitacion/${group.token}/confirmar`, { replace: true });
         }
       })
       .catch(() => undefined);
@@ -43,7 +44,7 @@ export default function InvitacionClient({ group }: Props) {
   };
 
   const goToConfirm = () => {
-    window.location.assign(`/invitacion/${group.token}/confirmar`);
+    navigateInvitation(`/invitacion/${group.token}/confirmar`);
   };
 
   return (

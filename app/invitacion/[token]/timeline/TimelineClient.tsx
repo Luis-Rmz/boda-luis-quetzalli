@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Check, Copy, ExternalLink, Gift, MapPin, Shirt } from 'lucide-react';
+import { Check, Copy, ExternalLink, Gift, MapPin } from 'lucide-react';
 import QRCode from 'qrcode';
 import type { GuestGroup } from '@/app/data/guests';
 
@@ -40,6 +40,28 @@ const schedule = [
 
 function googleMapsUrl(query: string): string {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+}
+
+function FormalAttireIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 64 40"
+      width="48"
+      height="30"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.35"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="text-salvia"
+    >
+      <path d="M5 5l11 7L11 18 7 8M27 5l-11 7 5 6 4-10" />
+      <path d="M13 14l3-2 3 2-2 5 4 15-5 4-5-4 4-15-2-5Z" />
+      <path d="M42 8l5-5 5 5-3 10 9 18H36l9-18-3-10Z" />
+      <path d="M42 8c2 2 8 2 10 0M41 23h12" />
+    </svg>
+  );
 }
 
 function CopyButton({ value, label }: { value: string; label: string }) {
@@ -89,10 +111,11 @@ export default function TimelineClient({ group, gift }: Props) {
   const hasGiftDetails = Boolean(gift?.paymentUrl || gift?.clabe || gift?.revtag || gift?.registryUrl);
 
   return (
-    <main className="relative min-h-dvh overflow-x-hidden px-11 py-16 text-center sm:px-16 sm:py-20">
-      <div className="pointer-events-none fixed inset-5 z-20 border border-salvia/40 sm:inset-7" />
+    <main className="relative h-dvh overflow-hidden text-center">
+      <div className="pointer-events-none absolute inset-5 z-20 border border-salvia/40 sm:inset-7" />
 
-      <div className="mx-auto flex w-full max-w-2xl flex-col items-center">
+      <div className="absolute inset-[21px] overflow-y-auto overflow-x-hidden overscroll-contain [scrollbar-width:thin] sm:inset-[29px]">
+      <div className="mx-auto flex min-h-full w-full max-w-2xl flex-col items-center px-6 py-10 sm:px-9 sm:py-12">
         <header className="flex flex-col items-center animate-fade-up">
           <p className="font-serif text-[11px] uppercase tracking-[0.42em] text-black/40 sm:text-xs">
             Luis &amp; Quetzalli
@@ -165,7 +188,7 @@ export default function TimelineClient({ group, gift }: Props) {
         </div>
 
         <section className="flex w-full max-w-lg flex-col items-center pb-10">
-          <Shirt aria-hidden="true" className="text-salvia" size={25} strokeWidth={1.2} />
+          <FormalAttireIcon />
           <p className="mt-5 font-serif text-[11px] uppercase tracking-[0.4em] text-black/40 sm:text-xs">
             Código de vestimenta
           </p>
@@ -305,6 +328,7 @@ export default function TimelineClient({ group, gift }: Props) {
         <p className="pb-7 font-serif text-[11px] uppercase tracking-[0.28em] text-black/25">
           León, Guanajuato · 19 · 12 · 2026
         </p>
+      </div>
       </div>
     </main>
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { GuestGroup } from '@/app/data/guests';
+import { navigateInvitation } from '@/app/invitacion/navigation';
 
 interface Props {
   group: GuestGroup;
@@ -151,13 +152,14 @@ export default function ConfirmarClient({ group, existingRSVP }: Props) {
                 style={{ animationDelay: '2.5s' }}>
                 El programa de la boda ya está disponible.
               </p>
-              <a
-                href={`/invitacion/${group.token}/timeline`}
+              <button
+                type="button"
+                onClick={() => navigateInvitation(`/invitacion/${group.token}/timeline`)}
                 className="border-b border-black/60 pb-1 font-cursive text-3xl text-black/80 transition-colors hover:text-salvia animate-fade-up"
                 style={{ animationDelay: '2.7s' }}
               >
                 Ver programa
-              </a>
+              </button>
             </>
           ) : (
             <>
