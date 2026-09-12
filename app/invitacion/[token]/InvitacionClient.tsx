@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import type { GuestGroup } from '@/app/data/guests';
 import { useAudio } from '@/app/invitacion/AudioContext';
@@ -15,23 +15,6 @@ export default function InvitacionClient({ group }: Props) {
   const [overlayFading, setOverlayFading] = useState(false);
   const [invitationVisible, setInvitationVisible] = useState(false);
   const { play } = useAudio();
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch(`/api/rsvp?token=${encodeURIComponent(group.token)}`)
-      .then((res) => res.ok ? res.json() : null)
-      .then((data) => {
-        if (!cancelled && data?.existingRSVP) {
-          navigateInvitation(`/invitacion/${group.token}/confirmar`, { replace: true });
-        }
-      })
-      .catch(() => undefined);
-
-    return () => {
-      cancelled = true;
-    };
-  }, [group.token]);
 
   const enter = () => {
     if (overlayFading) return;
